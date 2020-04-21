@@ -1,0 +1,14 @@
+name: aidio
+description: A new dart i/o socket application.
+version: 1.0.0+1
+homepage: https://github.com/ifehrim/aid.io
+
+environment:
+  sdk: ">=2.6.0 <3.0.0"
+
+
+
+
+
+
+
