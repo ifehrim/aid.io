@@ -1,14 +1,11 @@
 # Aid.io Dart 
 
-1.0.0v
 
 Simple Dart Socket library in Dart
 
 Protocol: ``[cmd,ack,data.size,data]`` Uint8 in Dart
 
-Explain: ``head(10byte) [cmd:1,ack:1,size:8][body] `` 
-
-
+Explain: ``head(10byte) [cmd:1,ack:1,size:8] body:[data] `` 
 
 
 ## Server Usage  

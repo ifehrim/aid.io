@@ -1,6 +1,6 @@
 name: aidio
-description: A new dart i/o socket application, using io dart pure io lib and simple data transform protocol. Such:[cmd,ack,data.size,data].
-version: 1.0.0+2
+description: A new dart i/o socket application, using io dart pure io lib and simple data transform protocol:[cmd,ack,data.size,data].
+version: 1.0.0+3
 homepage: https://github.com/ifehrim/aid.io
 
 environment:

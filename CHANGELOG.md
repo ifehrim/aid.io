@@ -1,5 +1,5 @@
-## 1.0.0+2
+## 1.0.0+3
 
 **Releasing:**
 
-* fixed publish requires
+* fixed publish requires, clean up codes
