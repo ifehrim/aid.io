@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
-//IoCommond
+/// IoCommond
 enum IoCommond {
   none,
   error,
@@ -12,13 +12,10 @@ enum IoCommond {
   ack,
   msg,
   emit,
-  ///  here set up your commonds, if you need
+  //  here set up your commonds, if you need
 }
 
-/**
- * Server io
- */
-
+/// AidioServer
 class AidioServer extends AidioProtocol {
   bool auth = false;
 
@@ -49,10 +46,7 @@ class AidioServer extends AidioProtocol {
   }
 }
 
-/**
- * Client io
- */
-
+/// AidioClient
 class AidioClient extends AidioProtocol {
   init({String host = '127.0.0.1', int port = 4041}) async {
     try {
@@ -77,10 +71,7 @@ class AidioClient extends AidioProtocol {
   }
 }
 
-/**
- * Socket Data Utilities
- */
-
+/// AidioData
 class AidioData {
   IoCommond commond;
   Uint8List data;
@@ -101,21 +92,15 @@ class AidioData {
   }
 }
 
-/**
- *
- * Socket Data Protocol
- *
- *   [cmd,ack,data.size,data]
- *
- *
- * Example:
- *
- *   1.client-> auth to ->server
- *   2.client receive [IoCommond.connected,0,data.size,data] or [IoCommond.denied,0,data.size,data]
- *   3.client send [IoCommond.file,0,data.size,data]
- *   4.server receive [IoCommond.file,1,data.size,data]
- *
- */
+///
+///  * Socket Data Protocol
+/// * [cmd,ack,data.size,data]
+/// * Example:
+/// *
+/// *   1.client-> auth to ->server
+/// *   2.client receive [IoCommond.connected,0,data.size,data] or [IoCommond.denied,0,data.size,data]
+/// *   3.client send [IoCommond.file,0,data.size,data]
+/// *   4.server receive [IoCommond.file,1,data.size,data]
 
 class AidioProtocol {
   ServerSocket io;
@@ -141,12 +126,12 @@ class AidioProtocol {
   int _size = 0;
 
   Future<void> close() async {
-    try{
+    try {
       await listen?.cancel();
       await socket?.close();
       await controller?.close();
       await io?.close();
-    }catch(ignore){}
+    } catch (ignore) {}
   }
 
   send(IoCommond cmd, Object obj) {
@@ -176,7 +161,7 @@ class AidioProtocol {
     if (_buffer != null) {
       data = Uint8List.fromList([..._buffer, ...data]);
       _buffer = null;
-      //body is coming, need to resolve
+      ///body is coming, need to resolve
       if (_diff < 0) {
         _diff = data.length - _size;
         if (_diff == 0) {
@@ -197,36 +182,36 @@ class AidioProtocol {
       _buffer = data;
       return;
     }
-    //head should be 10 byte
+    ///head should be 10 byte
     var head = data.sublist(0, 10);
     cmd = head[0];
     ack = head[1];
     _size = head.sublist(2).buffer.asUint64List().first;
 
-    //body should be size byte to full
+    ///body should be size byte to full
     var body = data.sublist(10);
 
     _length = body.length;
     _diff = _length - _size;
 
-    // perfect time body full
+    /// perfect time body full
     if (_diff == 0) {
       _buffer = null;
       _onData(commond, body);
-      // extra package should be solve
+      /// extra package should be solve
     } else if (_diff > 0) {
       _buffer = body.sublist(_size);
       body = body.sublist(0, _size);
       _onData(commond, body);
 
-      //body is coming, need to receive
+      ///body is coming, need to receive
     } else if (_diff < 0) {
       _buffer = data.sublist(0);
     }
 
     if (commond != IoCommond.ack && !_ackLook) send(IoCommond.ack, _length.toString());
 
-    //extra package solving
+    ///extra package solving
     if (_buffer != null && _buffer.length > 10) {
       _ackLook = true;
       var data = _buffer.sublist(0);
